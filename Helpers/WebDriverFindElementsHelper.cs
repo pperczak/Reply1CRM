@@ -4,26 +4,25 @@ using System.Collections.ObjectModel;
 
 namespace Reply1CRM.Helpers
 {
-    public static class WebDriverHelper
+    public static class WebDriverFindElementsHelper
     {
         public static IWebElement FindElement(this ISearchContext context, By by, int timeoutInSeconds)
         {
             if (timeoutInSeconds > 0)
             {
-                DefaultWait<ISearchContext> wait = new DefaultWait<ISearchContext>(context);
+                var wait = new DefaultWait<ISearchContext>(context);
                 wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
                 wait.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
                 return wait.Until(c => c.FindElement(by));
             }
             return context.FindElement(by);
-
         }
 
         public static ReadOnlyCollection<IWebElement> FindElements(this ISearchContext context, By by, int timeoutInSeconds)
         {
             if (timeoutInSeconds > 0)
             {
-                DefaultWait<ISearchContext> wait = new DefaultWait<ISearchContext>(context);
+                var wait = new DefaultWait<ISearchContext>(context);
                 wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
                 wait.Timeout = TimeSpan.FromSeconds(timeoutInSeconds);
                 return wait.Until(c => (c.FindElements(by).Count > 0) ? c.FindElements(by) : null);

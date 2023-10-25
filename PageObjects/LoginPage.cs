@@ -3,24 +3,25 @@ using Reply1CRM.Helpers;
 
 namespace Reply1CRM.PageObjects
 {
-    public class LoginPage
+    public class LoginPage : BasePage
     {
         private const string url = "https://demo.1crmcloud.com/login.php";
-        private IWebDriver webdriver;
         private const string loginData = "admin";
 
-        public LoginPage(IWebDriver driver)
-        {
-            this.webdriver = driver;
-        }
+        public LoginPage(IWebDriver driver) : base(driver) { }
 
-        private IWebElement userNameField => webdriver.FindElement(By.CssSelector("#login_user"), 10);
-        private IWebElement passwordField => webdriver.FindElement(By.CssSelector("#login_pass"), 10);
-        private IWebElement loginButton => webdriver.FindElement(By.CssSelector("#login_button"), 10);
+        private IWebElement userNameField => _driver.FindElement(By.CssSelector("#login_user"), 10);
+        private IWebElement passwordField => _driver.FindElement(By.CssSelector("#login_pass"), 10);
+        private IWebElement loginButton => _driver.FindElement(By.CssSelector("#login_button"), 10);
+        private By avatar => By.CssSelector(".default-avatar");
 
         public LoginPage NavigateToLoginPage()
         {
-            webdriver.Navigate().GoToUrl(url);
+            if (_driver.Url != url) 
+            {
+                _driver.Navigate().GoToUrl(url);
+            }
+
             return this;
         }
 
@@ -31,6 +32,11 @@ namespace Reply1CRM.PageObjects
             loginButton.Click();
 
             return this;
+        }
+
+        public void EnsureUserIsLoggedIn()
+        {
+            _driver.WaitForVisible(avatar);
         }
     }
 }

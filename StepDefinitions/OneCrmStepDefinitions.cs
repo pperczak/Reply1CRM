@@ -1,8 +1,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Reply1CRM.PageObjects;
-using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace Reply1CRM.StepDefinitions
 {
@@ -11,32 +11,50 @@ namespace Reply1CRM.StepDefinitions
     {
         private IWebDriver _webDriver;
         private readonly LoginPage _loginPage;
+        private readonly CrmMainPageMenuNavPage _crmMainPageMenuTabPage;
+        private readonly CrmMainPageMenuSubNavPage _crmMainPageMenuSubNavPage;
+        private readonly ContactsPage _contactsPage;
 
         public OneCrmStepDefinitions(/*IWebDriver webdriver*/)
         {
             new DriverManager().SetUpDriver(new ChromeConfig());
             _webDriver = new ChromeDriver();
-            _loginPage = new LoginPage(_webDriver);
+
+            _loginPage = new(_webDriver);
+            _crmMainPageMenuTabPage = new(_webDriver);
+            _crmMainPageMenuSubNavPage = new(_webDriver);
+            _contactsPage = new(_webDriver);
         }
 
         [Given(@"I am logged into OneCrm Page")]
         public void GivenIAmLoggedIntoOneCrmPage()
         {
-            _loginPage
+             _loginPage
                 .NavigateToLoginPage()
-                .PerformLogin();
-
-            Thread.Sleep(7000);
+                .PerformLogin()
+                .EnsureUserIsLoggedIn();
         }
 
-
-        [Given("the second number is (.*)")]
-        public void GivenTheSecondNumberIs(int number)
+        [When(@"I choose The Tab '([^']*)'")]
+        public void WhenIChooseTheTab(string tabName)
         {
-            //TODO: implement arrange (precondition) logic
-
-            throw new PendingStepException();
+            _crmMainPageMenuTabPage.ChooseSalesNMarketingTab(tabName);
         }
+
+        [When(@"I choose The Sub Nav '([^']*)'")]
+        public void WhenIChooseTheSubNav(string subNav)
+        {
+            _crmMainPageMenuSubNavPage.ChooseSubNav(subNav);
+        }
+
+        [When(@"I choose to create a new '([^']*)'")]
+        public void WhenIChooseToCreateANew(string contact)
+        {
+            _contactsPage.ClickCreateNewContactButton();
+            Thread.Sleep(9000);
+        }
+
+
 
         [When("the two numbers are added")]
         public void WhenTheTwoNumbersAreAdded()
