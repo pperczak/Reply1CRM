@@ -1,8 +1,8 @@
 ﻿Feature: OneCRM_Scenario001
 
-A short summary of the feature
-
 Scenario: Scenario 1 – Create contact:
 	Given I am logged into OneCrm Page
-	#When [action]
+	When I choose The Tab 'Sales & Marketing'
+	And I choose The Sub Nav 'Contacts'
+	And I choose to create a new 'Contact'
 	#Then [outcome]
